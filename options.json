@@ -1,0 +1,34 @@
+{
+    "movements" : {
+        "backward" : "blink",
+        "forward" : "cheeks",
+        "turn_left" : "mouth",
+        "turn_right" : "tongue",
+        "stop" : "wrinkle"
+    },
+
+    "models" : {
+        "face_detector" : "models/face_detector_model/",
+        "fmr_model" : "models/fmr_model/"
+    },
+
+    "authorized_people" : {
+        "image_files" : ["files/humberto.jpeg"] 
+    },
+
+    "camera_settings" : {
+        "camera_id" : 0,
+        "camera_fps" : null
+    },
+
+    "publish_settings" : {
+        "display_opencv" : false,
+        "broker_uri" : "amqp://localhost:5672",
+        "service_name" : "fmr.frame" 
+    },
+
+    "other" : {
+        "bounding_box_offset" : 10,
+        "skip_frame" : true
+    }
+}

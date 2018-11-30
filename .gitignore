@@ -1,0 +1,14 @@
+# vscode
+.vscode
+
+# python
+__pycache__
+
+# tf model
+models/fmr_model/checkpoint
+models/fmr_model/graph.pbtxt
+models/fmr_model/model.ckpt-10411.*
+
+# docker
+Dockerfile
+.dockerignore

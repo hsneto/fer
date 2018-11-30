@@ -1,1 +1,3 @@
-# fmr
+# Facial Movement Recognition
+
+> Under development
