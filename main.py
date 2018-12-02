@@ -15,7 +15,8 @@ op = read_options(sys.argv[1] if len(sys.argv) > 1 else "options.json")
 print("[DONE]")
 
 # Get labels
-labels = get_labels(op.movements)
+labels = get_labels(op.expressions["labels"], op.expressions["commands"], op.expressions["default"])
+inv_labels = {v: k for k, v in labels.items()}
 
 # Get models files
 model_tf_path = op.models["fmr_model"]
@@ -38,6 +39,7 @@ publish = True if broker_uri is not None else False
 # Get other settings
 offset = op.other["bounding_box_offset"]
 skip_frame = op.other["skip_frame"]
+show_command = op.other["show_command"]
 
 # Loading Caffe model to OpenCV's deep learning face detector
 print("[INFO] Loading face detector model...", end="", flush=True)
@@ -132,7 +134,6 @@ while True:
             if True in matches:
                 color = (0,255,0)
                 is_authz = True
-                break
             else:
                 color = (0,0,255)
                 is_authz = False
@@ -141,13 +142,20 @@ while True:
             if is_authz:
                 mini_frame = mini_frame.reshape(1,100,100,3)
                 fer_output = model.predict(mini_frame, labels, graph, sess)
+                if show_command:
+                    fer_output = inv_labels[fer_output]
             else:
                 fer_output = "Denied"
 
+            # draw bounding box and write label
             fnt = cv2.FONT_HERSHEY_DUPLEX
             cv2.rectangle(frame, (x0, y0), (x1, y1), color, 2)
             cv2.rectangle(frame, (x0, y1-35), (x1, y1), color, cv2.FILLED)
             cv2.putText(frame, fer_output, (x0+6, y1-6), fnt, 1.0, (255, 255, 255), 1)
+
+            # Break the loop through detected faces if the user was found
+            if is_authz:
+                break
 
         # Publish frames
         if publish:

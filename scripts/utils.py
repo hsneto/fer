@@ -24,18 +24,27 @@ def read_options(file, verbose=False):
   return op
 
 
-def get_labels(movements):
-  # get list of useful labels
-  labels = list(movements.values())
-  # all labels availables
-  all_labels = ["cheeks", "mouth", "blink", "eyeb. lowered", "tongue", "kiss", "eyeb. raised", "wrinkle", "neutral"]
+def get_labels(expressions, commands, default):
+  """
+  Get all available labels and return those which were selected as a command
 
-  # turn not used labels into neutral
-  for i in range(len(all_labels)):
-    if all_labels[i] not in labels:
-      all_labels[i] = "neutral"
+  Args:
+    \-> list with all available labels
+    \-> list with the chosen labels
+    \-> default expressionto replace non-used labels
 
-  return all_labels
+  Output:
+    \-> new list of labels
+  """
+
+  command_labels = list(commands.values())
+
+  # turn not used labels into default expression
+  for i in range(len(expressions)):
+    if expressions[i] not in command_labels:
+      expressions[i] = default
+
+  return expressions
 
 
 def get_pb_image(input_image, encode_format='.jpeg', compression_level=0.8):

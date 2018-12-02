@@ -1,10 +1,19 @@
 {
-    "movements" : {
-        "backward" : "blink",
-        "forward" : "cheeks",
-        "turn_left" : "mouth",
-        "turn_right" : "tongue",
-        "stop" : "wrinkle"
+    "expressions" : {
+        "default" : "neutral",
+
+        "labels" : ["cheeks", "mouth", "blink", 
+                    "None", "tongue", "kiss", 
+                    "eyeb. raised", "wrinkle", 
+                    "neutral"],
+        
+        "commands" : {
+            "backward" : "blink",
+            "forward" : "cheeks",
+            "turn_left" : "mouth",
+            "turn_right" : "tongue",
+            "stop" : "wrinkle"
+        }
     },
 
     "models" : {
@@ -29,6 +38,7 @@
 
     "other" : {
         "bounding_box_offset" : 10,
-        "skip_frame" : true
+        "skip_frame" : true,
+        "show_command" : false
     }
 }
