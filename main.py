@@ -16,7 +16,7 @@ print("[DONE]")
 
 # Get labels
 labels = get_labels(op.expressions["labels"], op.expressions["commands"], op.expressions["default"])
-inv_labels = {v: k for k, v in labels.items()}
+inv_labels = {v: k for k, v in op.expressions["commands"].items()}
 
 # Get models files
 model_tf_path = op.models["fmr_model"]
