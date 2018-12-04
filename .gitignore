@@ -5,9 +5,8 @@
 __pycache__
 
 # tf model
-models/fer_model/checkpoint
 models/fer_model/graph.pbtxt
-models/fer_model/model.ckpt-10411.*
+models/fer_model/model.ckpt*
 
 # docker
 Dockerfile
