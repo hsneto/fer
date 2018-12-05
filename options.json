@@ -3,7 +3,7 @@
         "default" : "neutral",
 
         "labels" : ["cheeks", "mouth", "blink", 
-                    "None", "tongue", "kiss", 
+                    "eyeb. lowered", "tongue", "kiss", 
                     "eyeb. raised", "wrinkle", 
                     "neutral"],
         
@@ -12,17 +12,25 @@
             "forward" : "cheeks",
             "turn_left" : "mouth",
             "turn_right" : "tongue",
-            "stop" : "wrinkle"
+            "stop" : "wrinkle",
+            "neutral" : "neutral"
         }
     },
 
     "models" : {
+        "fer_model" : "models/fer_model/",
         "face_detector" : "models/face_detector_model/",
-        "fmr_model" : "models/fmr_model/"
+        "shape_predictor" : "models/shape_predictor/"
     },
 
     "authorized_people" : {
         "image_files" : ["files/humberto.jpeg"] 
+    },
+
+    "recognition_settings" : {
+        "image_input_size" : 100,
+        "face_alignment" : true,
+        "bounding_box_offset" : 10
     },
 
     "camera_settings" : {
@@ -31,13 +39,12 @@
     },
 
     "publish_settings" : {
-        "display_opencv" : false,
-        "broker_uri" : "amqp://localhost:5672",
-        "service_name" : "fmr.frame" 
+        "display_opencv" : true,
+        "broker_uri" : null,
+        "service_name" : "fer.frame" 
     },
 
     "other" : {
-        "bounding_box_offset" : 10,
         "skip_frame" : true,
         "show_command" : false
     }

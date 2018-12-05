@@ -1,9 +1,11 @@
 import os
 import sys
 import cv2
+import dlib
 import face_recognition
 import tensorflow as tf
 from is_wire.core import Message, Logger
+from imutils.face_utils import FaceAligner
 
 from scripts.utils import *
 import scripts.face_detector as face
@@ -19,12 +21,18 @@ labels = get_labels(op.expressions["labels"], op.expressions["commands"], op.exp
 inv_labels = {v: k for k, v in op.expressions["commands"].items()}
 
 # Get models files
-model_tf_path = op.models["fmr_model"]
+model_tf_path = op.models["fer_model"]
+model_dlib_path = os.path.join(op.models["shape_predictor"], "shape_predictor_68_face_landmarks.dat")
 model_caffe_path = os.path.join(op.models["face_detector"], "res10_300x300_ssd_iter_140000.caffemodel")
 proto_caffe_path = os.path.join(op.models["face_detector"], "deploy.prototxt")
 
 # Get authorized people image files
 authz_people = op.authorized_people["image_files"]
+
+# Get recognition settings
+image_input_size = op.recognition_settings["image_input_size"]
+face_alignment = op.recognition_settings["face_alignment"]
+offset = op.recognition_settings["bounding_box_offset"]
 
 # Get camera settings
 cam_id = op.camera_settings["camera_id"]
@@ -37,7 +45,6 @@ service_name = op.publish_settings["service_name"]
 publish = True if broker_uri is not None else False
 
 # Get other settings
-offset = op.other["bounding_box_offset"]
 skip_frame = op.other["skip_frame"]
 show_command = op.other["show_command"]
 
@@ -45,6 +52,15 @@ show_command = op.other["show_command"]
 print("[INFO] Loading face detector model...", end="", flush=True)
 detector = cv2.dnn.readNetFromCaffe(proto_caffe_path, model_caffe_path)
 print("[DONE]")
+
+if face_alignment:
+    # Loading dlib shape predictor
+    print("[INFO] Loading dlib shape predictor...", end="", flush=True)
+    shape_predictor = dlib.shape_predictor(model_dlib_path)
+    print("[DONE]")
+
+    # Loading imutils FaceAligner
+    fa = FaceAligner(shape_predictor, desiredFaceWidth=image_input_size)
 
 # Loading Tensorflow FER recognition model
 print("[INFO] Loading FER recognition model ...", end="", flush=True)
@@ -101,6 +117,9 @@ while True:
     if process_this_frame:
         (h, w) = frame.shape[:2]
 
+        # Get gray frame
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
         # Detect faces in frame
         boxes = face.compute(frame, detector)
 
@@ -118,10 +137,15 @@ while True:
                 x0 -= ofx
                 x1 += ofx
 
-            # Get face in image - Convert it to RGB - Resize to (100,100)
-            mini_frame = cv2.cvtColor(frame[y0:y1, x0:x1], cv2.COLOR_BGR2RGB)
-            mini_frame = cv2.resize(mini_frame, (100,100))
+            # Get face in image - Convert it to RGB - Resize to (image_input_size,image_input_size)
+            if face_alignment:
+                mini_frame = fa.align(frame, gray_frame, dlib.rectangle(x0,y0,x1,y1))
 
+            else:
+                mini_frame = cv2.cvtColor(frame[y0:y1, x0:x1], cv2.COLOR_BGR2RGB)
+                mini_frame = cv2.resize(mini_frame, (image_input_size, image_input_size))
+
+            # Encode face features in mini_frame
             face_locations = face_recognition.face_locations(mini_frame)
             face_encodings = face_recognition.face_encodings(mini_frame, face_locations)
             
