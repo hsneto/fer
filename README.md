@@ -10,6 +10,10 @@ python3 main.py
 
 ### Comments:
 
+#### Options:
+
+options.json explained [here](options.md).
+
 #### Train a model:
 
 It is necessary to train a Tensorflow model to predict facial expressions. Given the trained graph, you may need to change the `predict` function in [restore_tf_model](scripts/restore_tf_model.py). 
