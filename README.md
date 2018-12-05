@@ -12,7 +12,7 @@ python3 main.py
 
 #### Options:
 
-options.json explained [here](options.md).
+`options.json` explained [here](options.md).
 
 #### Train a model:
 
