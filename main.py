@@ -2,6 +2,7 @@ import os
 import sys
 import cv2
 import dlib
+from time import time
 import face_recognition
 import tensorflow as tf
 from is_wire.core import Message, Logger
@@ -107,7 +108,19 @@ else:
     print("[ERROR] Camera not found")
     sys.exit(-1)
 
+# Text font
+fnt = cv2.FONT_HERSHEY_DUPLEX
+
+# Count frames to compute FPS
+total_frames = 5
+frame_count = 0
+fps_value = 0.0
+
 while True:
+    # Get initial time in frame 0
+    if frame_count == 0:
+        time_start = time()
+
     # Capture video frames
     ret, frame = cap.read()
     
@@ -173,10 +186,12 @@ while True:
                 fer_output = "Denied"
 
             # draw bounding box and write label
-            fnt = cv2.FONT_HERSHEY_DUPLEX
             cv2.rectangle(frame, (x0, y0), (x1, y1), color, 2)
             cv2.rectangle(frame, (x0, y1-35), (x1, y1), color, cv2.FILLED)
             cv2.putText(frame, fer_output, (x0+6, y1-6), fnt, 1.0, (255, 255, 255), 1)
+
+            # write fps
+            cv2.putText(frame, "FPS: {:.2f}".format(fps_value), (10, 20), fnt, 0.5, (255, 255, 255), 1)
 
             # Break the loop through detected faces if the user was found
             if is_authz:
@@ -200,6 +215,17 @@ while True:
                 cv2.destroyAllWindows()
                 sys.exit(0)
 
-    # compute fmr for only for half of frames
+        # Compute FPS
+        frame_count += 1
+
+        if frame_count == total_frames:
+            time_end = time()
+
+            fps_value = total_frames / (time_end - time_start)
+
+            # Reset counter
+            frame_count = 0
+
+    # compute fer for only for half of frames
     if skip_frame:
         process_this_frame = not process_this_frame
