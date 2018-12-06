@@ -130,7 +130,7 @@ while True:
             ofx = int((x1-x0) * offset / 100)
 
             # apply offset to bounding box
-            if (y1 + ofy) <= w and (y0 - ofy) >= 0:
+            if (y1 + ofy) <= h and (y0 - ofy) >= 0:
                 y0 -= ofy
                 y1 += ofy
             if (x1 + ofx) <= w and (x0 - ofx) >= 0:
@@ -140,6 +140,7 @@ while True:
             # Get face in image - Convert it to RGB - Resize to (image_input_size,image_input_size)
             if face_alignment:
                 mini_frame = fa.align(frame, gray_frame, dlib.rectangle(x0,y0,x1,y1))
+                mini_frame = cv2.cvtColor(mini_frame, cv2.COLOR_BGR2RGB)
 
             else:
                 mini_frame = cv2.cvtColor(frame[y0:y1, x0:x1], cv2.COLOR_BGR2RGB)
