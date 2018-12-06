@@ -5,14 +5,14 @@
 After set all configurations in the [options file](options.json). Run:
 
 ```sh
-python3 main.py
+python3 main.py [options.json]
 ```
 
 ### Comments:
 
 #### Options:
 
-`options.json` explained [here](options.md).
+`options.json` explained [here](docs/options.md).
 
 #### Train a model:
 
@@ -25,7 +25,6 @@ In order to send/receive messages an amqp broker is necessary, to create one sim
 ```sh
 docker container run -d --rm -p 5672:5672 -p 15672:15672 rabbitmq:3.7.6-management
 ```
-
 
 ## Dockerfile
 
@@ -62,6 +61,19 @@ docker container run --rm -ti \
 
 xhost -local:docker
 ```
+
+## Examples
+
+<!-- ![gif](docs/images/fer-gif-example.gif) -->
+
+### Facial Gestures Examples:
+
+![fge](docs/images/facial-gestures-example.png)
+
+### Pipeline:
+
+![pipeline](docs/images/pipeline.png)
+
 
 ## Authors
 
