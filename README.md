@@ -64,7 +64,7 @@ xhost -local:docker
 
 ## Examples
 
-<!-- ![gif](docs/images/fer-gif-example.gif) -->
+![gif](docs/images/fer-gif-example.gif)
 
 ### Facial Gestures Examples:
 
