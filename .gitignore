@@ -9,5 +9,5 @@ models/fer_model/graph.pbtxt
 models/fer_model/model.ckpt*
 
 # docker
-Dockerfile
+#Dockerfile
 .dockerignore
